@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football WhatsApp Channel Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #25D366;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: #25D366;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Main Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 1100px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* Cards */
+        .card {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-title {
+            color: #25D366;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Controls */
+        .controls {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-group input, .input-group select {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #25D366;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.3);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: #25D366;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1da851;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #25D366;
+            border: 1px solid #25D366;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(37, 211, 102, 0.1);
+        }
+        
+        /* Games List */
+        .games-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .game-item {
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #25D366;
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .league { color: #25D366; font-weight: bold; font-size: 0.9rem; }
+        .time { color: #aaa; font-size: 0.9rem; }
+        
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .team {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .team-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .vs {
+            font-size: 1.5rem;
+            color: #666;
+            font-weight: bold;
+            padding: 0 20px;
+        }
+        
+        .form {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+        
+        .form-box {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+        
+        .form-box.W { background: #25D366; color: black; }
+        .form-box.D { background: #666; color: white; }
+        .form-box.L { background: #ff4444; color: white; }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            background: rgba(20, 20, 20, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        /* WhatsApp Generator */
+        .whatsapp-output {
+            background: #000;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: 'Segoe UI', monospace;
+            font-size: 15px;
+            line-height: 1.6;
+            border: 2px solid #25D366;
+            margin-bottom: 20px;
+        }
+        
+        .output-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-copy {
+            background: #25D366;
+            color: white;
+            flex: 2;
+        }
+        
+        .btn-clear {
+            background: #ff4444;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-test {
+            background: #075E54;
+            color: white;
+            flex: 1;
+        }
+        
+        /* Template Buttons */
+        .templates {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .template-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #25D366;
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .template-btn:hover {
+            background: rgba(37, 211, 102, 0.1);
+            border-color: #25D366;
+        }
+        
+        /* Stats */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(40, 40, 40, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-card i {
+            font-size: 24px;
+            color: #25D366;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value-large {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        /* Loading & Error States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #25D366;
+        }
+        
+        .loading:after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(37, 211, 102, 0.3);
+            border-top-color: #25D366;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            padding: 20px;
+            border-radius: 8px;
+            color: #ff4444;
+            text-align: center;
+        }
+        
+        .success {
+            background: rgba(37, 211, 102, 0.1);
+            border: 1px solid #25D366;
+            padding: 20px;
+            border-radius: 8px;
+            color: #25D366;
+            text-align: center;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #25D366;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1da851;
+        }
+        
+        /* Live Badge */
+        .live-badge {
+            background: #ff4444;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* API Status */
+        .api-status {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-futbol"></i> FOOTBALL WHATSAPP MANAGER</h1>
+            <p class="subtitle">Generate professional WhatsApp updates for your football channel</p>
+            <div class="api-status" id="apiStatus">API: 🔄 Testing...</div>
+        </header>
+        
+        <div class="main-grid">
+            <!-- Left Panel: Games & Controls -->
+            <div>
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-cog"></i> Controls</h2>
+                    
+                    <div class="controls">
+                        <div class="input-group">
+                            <input type="date" id="dateInput" value="">
+                            <select id="leagueSelect">
+                                <option value="">All Leagues</option>
+                                <option value="39">Premier League</option>
+                                <option value="140">La Liga</option>
+                                <option value="78">Bundesliga</option>
+                                <option value="135">Serie A</option>
+                                <option value="61">Ligue 1</option>
+                                <option value="2">Champions League</option>
+                            </select>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="loadGames()">
+                                <i class="fas fa-sync-alt"></i> LOAD GAMES
+                            </button>
+                            <button class="btn btn-secondary" onclick="loadLiveGames()">
+                                <i class="fas fa-broadcast-tower"></i> LIVE GAMES
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="stats-container" id="quickStats">
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-day"></i>
+                            <div class="stat-value-large" id="todayDate">--</div>
+                            <div class="stat-label">Today</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-futbol"></i>
+                            <div class="stat-value-large" id="totalMatches">0</div>
+                            <div class="stat-label">Matches</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-broadcast-tower"></i>
+                            <div class="stat-value-large" id="liveMatches">0</div>
+                            <div class="stat-label">Live</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-check-circle"></i>
+                            <div class="stat-value-large" id="completedMatches">0</div>
+                            <div class="stat-label">Finished</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 20px;">
+                    <h2 class="card-title"><i class="fas fa-list"></i> Games List</h2>
+                    <div id="gamesOutput" class="games-list">
+                        <div class="loading">Loading games...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Panel: WhatsApp Generator -->
+            <div>
+                <div class="card">
+                    <h2 class="card-title"><i class="fab fa-whatsapp"></i> WhatsApp Generator</h2>
+                    
+                    <!-- Generator Controls -->
+                    <div class="controls">
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="generateWhatsAppUpdate()">
+                                <i class="fas fa-robot"></i> GENERATE UPDATE
+                            </button>
+                            <button class="btn btn-secondary" onclick="generatePreview()">
+                                <i class="fas fa-eye"></i> PREVIEW
+                            </button>
+                        </div>
+                        
+                        <div class="templates">
+                            <button class="template-btn" onclick="useTemplate('morning')">
+                                <i class="fas fa-sun"></i> Morning Update
+                            </button>
+                            <button class="template-btn" onclick="useTemplate('results')">
+                                <i class="fas fa-poll"></i> Results Summary
+                            </button>
+                            <button class="template-btn" onclick="useTemplate('preview')">
+                                <i class="fas fa-binoculars"></i> Match Preview
+                            </button>
+                            <button class="template-btn" onclick="useTemplate('live')">
+                                <i class="fas fa-broadcast-tower"></i> Live Update
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- WhatsApp Message Output -->
+                    <div class="whatsapp-output" id="whatsappOutput">
+                        <div style="text-align: center; padding: 50px; color: #666;">
+                            <i class="fab fa-whatsapp" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <p>Your WhatsApp message will appear here</p>
+                            <small>Click "GENERATE UPDATE" to start</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Output Actions -->
+                    <div class="output-actions">
+                        <button class="btn btn-copy" onclick="copyToClipboard()" id="copyBtn">
+                            <i class="far fa-copy"></i> COPY TO CLIPBOARD
+                        </button>
+                        <button class="btn btn-clear" onclick="clearOutput()">
+                            <i class="fas fa-trash"></i> CLEAR
+                        </button>
+                        <button class="btn btn-test" onclick="testOnWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> TEST
+                        </button>
+                    </div>
+                    
+                    <!-- Message Stats -->
+                    <div style="text-align: center; margin-top: 15px; color: #888; font-size: 0.9rem;">
+                        <span id="messageStats">0 characters • 0 lines</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Toast Notification -->
+        <div id="toast" class="toast">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">Copied to clipboard!</span>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONFIGURATION ====================
+        const API_KEY = "6d1dc2bda07f1d1768d9ad2d082f00d4"; // Your API key
+        const API_BASE = "https://v3.football.api-sports.io";
+        
+        const TOP_LEAGUES = [
+            { id: 39, name: "Premier League", country: "England", emoji: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
+            { id: 140, name: "La Liga", country: "Spain", emoji: "🇪🇸" },
+            { id: 78, name: "Bundesliga", country: "Germany", emoji: "🇩🇪" },
+            { id: 135, name: "Serie A", country: "Italy", emoji: "🇮🇹" },
+            { id: 61, name: "Ligue 1", country: "France", emoji: "🇫🇷" },
+            { id: 2, name: "Champions League", country: "Europe", emoji: "🏆" }
+        ];
+        
+        // ==================== STATE ====================
+        let currentGames = [];
+        let currentDate = new Date().toISOString().split('T')[0];
+        
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date
+            const today = new Date();
+            document.getElementById('dateInput').valueAsDate = today;
+            document.getElementById('todayDate').textContent = formatDate(today);
+            
+            // Test API connection
+            testAPIConnection();
+            
+            // Load initial games
+            setTimeout(() => loadGames(), 1000);
+        });
+        
+        // ==================== API FUNCTIONS ====================
+        async function testAPIConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/status`, {
+                    headers: {
+                        "x-apisports-key": API_KEY,
+                        "Accept": "application/json"
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.response) {
+                    document.getElementById('apiStatus').innerHTML = 
+                        `API: ✅ Connected (${data.response.requests.current}/${data.response.requests.limit_day} requests)`;
+                    document.getElementById('apiStatus').style.color = "#25D366";
+                } else {
+                    document.getElementById('apiStatus').innerHTML = "API: ❌ Error";
+                    document.getElementById('apiStatus').style.color = "#ff4444";
+                }
+            } catch (error) {
+                document.getElementById('apiStatus').innerHTML = "API: ❌ Connection Failed";
+                document.getElementById('apiStatus').style.color = "#ff4444";
+            }
+        }
+        
+        async function fetchFixtures(league = "", date = "", live = false) {
+            try {
+                let url = `${API_BASE}/fixtures?season=2024`;
+                
+                if (live) {
+                    url += '&live=all';
+                } else if (date) {
+                    url += `&date=${date}`;
+                } else {
+                    url += `&date=${currentDate}`;
+                }
+                
+                if (league && league !== "") {
+                    url += `&league=${league}`;
+                }
+                
+                console.log("Fetching from:", url);
+                
+                const response = await fetch(url, {
+                    headers: {
+                        "x-apisports-key": API_KEY,
+                        "Accept": "application/json"
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.errors && Object.keys(data.errors).length > 0) {
+                    console.error("API Errors:", data.errors);
+                    return { fixtures: [], error: data.errors };
+                }
+                
+                return data.response || [];
+                
+            } catch (error) {
+                console.error("Fetch error:", error);
+                showToast(`API Error: ${error.message}`, "error");
+                return [];
+            }
+        }
+        
+        // ==================== GAME FUNCTIONS ====================
+        async function loadGames() {
+            const output = document.getElementById('gamesOutput');
+            output.innerHTML = '<div class="loading">Loading fixtures...</div>';
+            
+            const league = document.getElementById('leagueSelect').value;
+            const date = document.getElementById('dateInput').value || currentDate;
+            
+            try {
+                const fixtures = await fetchFixtures(league, date);
+                
+                if (!fixtures || fixtures.length === 0) {
+                    output.innerHTML = `
+                        <div class="error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>No fixtures found for this date.</p>
+                            <small>Try a different date or league</small>
+                        </div>
+                    `;
+                    updateStats(0, 0, 0);
+                    return;
+                }
+                
+                currentGames = fixtures;
+                displayGames(fixtures);
+                
+            } catch (error) {
+                console.error('Error loading games:', error);
+                output.innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error loading fixtures.</p>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            }
+        }
+        
+        async function loadLiveGames() {
+            const output = document.getElementById('gamesOutput');
+            output.innerHTML = '<div class="loading">Loading live games...</div>';
+            
+            try {
+                const fixtures = await fetchFixtures("", "", true);
+                
+                if (!fixtures || fixtures.length === 0) {
+                    output.innerHTML = `
+                        <div class="success">
+                            <i class="fas fa-broadcast-tower"></i>
+                            <p>No live games at the moment.</p>
+                            <small>Check back later</small>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                currentGames = fixtures;
+                displayGames(fixtures);
+                
+            } catch (error) {
+                console.error('Error loading live games:', error);
+                output.innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error loading live games.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayGames(fixtures) {
+            const output = document.getElementById('gamesOutput');
+            
+            if (!fixtures || fixtures.length === 0) {
+                output.innerHTML = '<div class="error">No games found</div>';
+                updateStats(0, 0, 0);
+                return;
+            }
+            
+            let html = '';
+            let liveCount = 0;
+            let completedCount = 0;
+            
+            // Sort by league and time
+            fixtures.sort((a, b) => {
+                if (a.league.name !== b.league.name) {
+                    return a.league.name.localeCompare(b.league.name);
+                }
+                return new Date(a.fixture.date) - new Date(b.fixture.date);
+            });
+            
+            fixtures.forEach(game => {
+                const matchTime = new Date(game.fixture.date);
+                const isLive = game.fixture.status.short === 'LIVE' || 
+                              game.fixture.status.short === 'HT' ||
+                              game.fixture.status.short === '1H' ||
+                              game.fixture.status.short === '2H';
+                const isCompleted = game.fixture.status.short === 'FT' ||
+                                   game.fixture.status.short === 'AET' ||
+                                   game.fixture.status.short === 'PEN';
+                
+                if (isLive) liveCount++;
+                if (isCompleted) completedCount++;
+                
+                const homeForm = generateTeamForm();
+                const awayForm = generateTeamForm();
+                const homeStats = generateTeamStats();
+                const awayStats = generateTeamStats();
+                
+                html += `
+                    <div class="game-item">
+                        <div class="game-header">
+                            <div class="league">
+                                ${game.league.name}
+                                ${isLive ? '<span class="live-badge">LIVE</span>' : ''}
+                            </div>
+                            <div class="time">
+                                ${matchTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                        </div>
+                        
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-name">${game.teams.home.name}</div>
+                                <div class="form">${homeForm.map(r => `<span class="form-box ${r}">${r}</span>`).join('')}</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-name">${game.teams.away.name}</div>
+                                <div class="form">${awayForm.map(r => `<span class="form-box ${r}">${r}</span>`).join('')}</div>
+                            </div>
+                        </div>
+                        
+                        ${game.goals.home !== null ? `
+                            <div style="text-align: center; font-size: 2rem; font-weight: bold; margin: 10px 0;">
+                                ${game.goals.home} - ${game.goals.away}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-label">Goals/Game</div>
+                                <div class="stat-value">
+                                    <span style="color:#25D366">${homeStats.goalsScored}</span> | 
+                                    <span>${awayStats.goalsScored}</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Conceded/Game</div>
+                                <div class="stat-value">
+                                    <span style="color:#25D366">${homeStats.goalsConceded}</span> | 
+                                    <span>${awayStats.goalsConceded}</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Win Rate</div>
+                                <div class="stat-value">
+                                    <span style="color:#25D366">${homeStats.winRate}%</span> | 
+                                    <span>${awayStats.winRate}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            output.innerHTML = html;
+            updateStats(fixtures.length, liveCount, completedCount);
+        }
+        
+        // ==================== STATS FUNCTIONS ====================
+        function updateStats(total, live, completed) {
+            document.getElementById('totalMatches').textContent = total;
+            document.getElementById('liveMatches').textContent = live;
+            document.getElementById('completedMatches').textContent = completed;
+        }
+        
+        // ==================== WHATSAPP FUNCTIONS ====================
+        async function generateWhatsAppUpdate() {
+            const output = document.getElementById('whatsappOutput');
+            output.innerHTML = '<div class="loading">Generating WhatsApp update...</div>';
+            
+            const date = document.getElementById('dateInput').value || currentDate;
+            
+            try {
+                // Fetch data for all top leagues
+                let allFixtures = [];
+                
+                for (const league of TOP_LEAGUES) {
+                    try {
+                        const fixtures = await fetchFixtures(league.id, date);
+                        if (fixtures && fixtures.length > 0) {
+                            allFixtures = [...allFixtures, ...fixtures];
+                        }
+                        // Small delay to avoid rate limiting
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    } catch (error) {
+                        console.error(`Error fetching ${league.name}:`, error);
+                    }
+                }
+                
+                if (allFixtures.length === 0) {
+                    output.innerHTML = `
+                        <div class="error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>No fixtures found to generate update.</p>
+                            <small>Try loading games first</small>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const message = generateWhatsAppMessage(allFixtures, date);
+                output.innerHTML = `<div style="white-space: pre-wrap;">${message}</div>`;
+                updateMessageStats(message);
+                showToast('WhatsApp update generated successfully!');
+                
+            } catch (error) {
+                console.error('Error generating update:', error);
+                output.innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error generating update.</p>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            }
+        }
+        
+        function generateWhatsAppMessage(fixtures, date) {
+            // Categorize fixtures
+            const liveFixtures = fixtures.filter(f => 
+                f.fixture.status.short === 'LIVE' || 
+                f.fixture.status.short === 'HT' ||
+                f.fixture.status.short === '1H' ||
+                f.fixture.status.short === '2H'
+            );
+            
+            const completedFixtures = fixtures.filter(f => 
+                f.fixture.status.short === 'FT' ||
+                f.fixture.status.short === 'AET' ||
+                f.fixture.status.short === 'PEN'
+            );
+            
+            const upcomingFixtures = fixtures.filter(f => 
+                f.fixture.status.short === 'NS' ||
+                f.fixture.status.short === 'TBD'
+            );
+            
+            const formattedDate = new Date(date).toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+            month: 'long',
+                day: 'numeric'
+            });
+            
+            let message = `⚽ *FOOTBALL DAILY UPDATE* ⚽\n\n`;
+            message += `📅 ${formattedDate}\n\n`;
+            
+            // Live matches
+            if (liveFixtures.length > 0) {
+                message += `🔴 *LIVE NOW* 🔴\n\n`;
+                liveFixtures.forEach(fixture => {
+                    const score = fixture.goals.home !== null ? 
+                        `${fixture.goals.home}-${fixture.goals.away}` : '0-0';
+                    message += `⚡ ${fixture.teams.home.name} ${score} ${fixture.teams.away.name}\n`;
+                    message += `   🏆 ${fixture.league.name}\n`;
+                    message += `   ⏰ ${fixture.fixture.status.elapsed || '0'}' minute\n\n`;
+                });
+            }
+            
+            // Results
+            if (completedFixtures.length > 0) {
+                message += `✅ *TODAY'S RESULTS*\n\n`;
+                
+                // Group by league
+                const byLeague = {};
+                completedFixtures.forEach(fixture => {
+                    if (!byLeague[fixture.league.name]) byLeague[fixture.league.name] = [];
+                    byLeague[fixture.league.name].push(fixture);
+                });
+                
+                Object.entries(byLeague).forEach(([leagueName, leagueFixtures]) => {
+                    const leagueEmoji = TOP_LEAGUES.find(l => l.name === leagueName)?.emoji || "🏆";
+                    message += `${leagueEmoji} *${leagueName}*\n`;
+                    
+                    leagueFixtures.forEach(fixture => {
+                        const winner = fixture.goals.home > fixture.goals.away ? fixture.teams.home.name :
+                                     fixture.goals.away > fixture.goals.home ? fixture.teams.away.name : "Draw";
+                        const emoji = winner === fixture.teams.home.name ? "🔴" : 
+                                    winner === fixture.teams.away.name ? "🔵" : "⚪";
+                        
+                        message += `• ${fixture.teams.home.name} ${fixture.goals.home}-${fixture.goals.away} ${fixture.teams.away.name}\n`;
+                        message += `  ${emoji} ${winner}\n`;
+                    });
+                    message += `\n`;
+                });
+            }
+            
+            // Upcoming fixtures
+            if (upcomingFixtures.length > 0) {
+                message += `📋 *UPCOMING FIXTURES*\n\n`;
+                
+                // Group by league
+                const byLeague = {};
+                upcomingFixtures.forEach(fixture => {
+                    if (!byLeague[fixture.league.name]) byLeague[fixture.league.name] = [];
+                    byLeague[fixture.league.name].push(fixture);
+                });
+                
+                Object.entries(byLeague).forEach(([leagueName, leagueFixtures]) => {
+                    const leagueEmoji = TOP_LEAGUES.find(l => l.name === leagueName)?.emoji || "🏆";
+                    message += `${leagueEmoji} *${leagueName}*\n`;
+                    
+                    // Group by time
+                    const byTime = {};
+                    leagueFixtures.forEach(fixture => {
+                        const time = new Date(fixture.fixture.date).toLocaleTimeString([], { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        });
+                        if (!byTime[time]) byTime[time] = [];
+                        byTime[time].push(fixture);
+                    });
+                    
+                    Object.entries(byTime).forEach(([time, timeFixtures]) => {
+                        message += `🕒 ${time}\n`;
+                        timeFixtures.forEach(fixture => {
+                            message += `• ${fixture.teams.home.name} vs ${fixture.teams.away.name}\n`;
+                        });
+                        message += `\n`;
+                    });
+                });
+            }
+            
+            // Highlight of the day
+            if (completedFixtures.length > 0) {
+                const highScoring = completedFixtures.reduce((max, fixture) => {
+                    const totalGoals = (fixture.goals.home || 0) + (fixture.goals.away || 0);
+                    const maxGoals = (max.goals.home || 0) + (max.goals.away || 0);
+                    return totalGoals > maxGoals ? fixture : max;
+                }, completedFixtures[0]);
+                
+                if (highScoring && ((highScoring.goals.home || 0) + (highScoring.goals.away || 0)) >= 3) {
+                    message += `🌟 *MATCH OF THE DAY* 🌟\n\n`;
+                    message += `⚽ ${highScoring.teams.home.name} ${highScoring.goals.home}-${highScoring.goals.away} ${highScoring.teams.away.name}\n`;
+                    message += `🏆 ${highScoring.league.name}\n`;
+                    message += `🎯 Total Goals: ${(highScoring.goals.home || 0) + (highScoring.goals.away || 0)}\n\n`;
+                    message += `What a thriller! 🔥\n\n`;
+                }
+            }
+            
+            // Stats summary
+            message += `📊 *STATS SUMMARY*\n`;
+            message += `• Total Matches: ${fixtures.length}\n`;
+            message += `• Live Now: ${liveFixtures.length}\n`;
+            message += `• Results: ${completedFixtures.length}\n`;
+            message += `• Upcoming: ${upcomingFixtures.length}\n\n`;
+            
+            // Closing
+            message += `Stay tuned for more updates!\n\n`;
+            message += `#Football #Soccer #Matchday #WhatsAppChannel`;
+            
+            return message;
+        }
+        
+        function generatePreview() {
+            if (currentGames.length === 0) {
+                showToast('Load games first!', 'error');
+                return;
+            }
+            
+            const previewGames = currentGames.slice(0, 3);
+            const date = document.getElementById('dateInput').value || currentDate;
+            const message = generateWhatsAppMessage(previewGames, date);
+            
+            const output = document.getElementById('whatsappOutput');
+            output.innerHTML = `<div style="white-space: pre-wrap;">${message}</div>`;
+            updateMessageStats(message);
+            showToast('Preview generated!');
+        }
+        
+        function useTemplate(type) {
+            let message = '';
+            const date = document.getElementById('dateInput').value || currentDate;
+            const formattedDate = new Date(date).toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            switch(type) {
+                case 'morning':
+                    message = `⚽ *FOOTBALL MORNING BRIEFING* ⚽\n\n`;
+                    message += `📅 ${formattedDate}\n\n`;
+                    message += `Good morning football fans! ⭐\n\n`;
+                    message += `🔥 *TODAY'S HIGHLIGHTS*\n`;
+                    message += `• Top teams in action\n`;
+                    message += `• Key matches to watch\n`;
+                    message += `• Star players returning\n\n`;
+                    message += `🏆 *LEAGUES IN ACTION*\n`;
+                    message += `• Premier League\n`;
+                    message += `• La Liga\n`;
+                    message += `• Serie A\n\n`;
+                    message += `🎯 *PREDICTION*\n`;
+                    message += `Expect plenty of goals today! ⚽⚽⚽\n\n`;
+                    message += `#FootballMorning #Matchday #Soccer`;
+                    break;
+                    
+                case 'results':
+                    message = `📊 *MATCH RESULTS ROUNDUP* 📊\n\n`;
+                    message += `📅 ${formattedDate}\n\n`;
+                    message += `Here are today's key results:\n\n`;
+                    message += `🏴󠁧󠁢󠁥󠁮󠁧󠁿 *PREMIER LEAGUE*\n`;
+                    message += `• Team A 2-1 Team B\n`;
+                    message += `  ⭐ Player Name (2 goals)\n\n`;
+                    message += `🇪🇸 *LA LIGA*\n`;
+                    message += `• Team C 3-2 Team D\n`;
+                    message += `  🔥 Amazing comeback!\n\n`;
+                    message += `🇩🇪 *BUNDESLIGA*\n`;
+                    message += `• Team E 0-0 Team F\n`;
+                    message += `  ⚔️ Defensive battle\n\n`;
+                    message += `#Results #Football #Scores`;
+                    break;
+                    
+                case 'preview':
+                    message = `🔮 *WEEKEND PREVIEW* 🔮\n\n`;
+                    message += `Big matches coming up:\n\n`;
+                    message += `⚔️ *THE DERBY*\n`;
+                    message += `Team A vs Team B\n`;
+                    message += `Sunday, 16:30\n`;
+                    message += `Form: WWLWD vs LDWWW\n\n`;
+                    message += `🏆 *TITLE SHOWDOWN*\n`;
+                    message += `Team C vs Team D\n`;
+                    message += `Saturday, 19:45\n`;
+                    message += `1st vs 2nd - 2 points gap!\n\n`;
+                    message += `🔴 *RELEGATION BATTLE*\n`;
+                    message += `Team E vs Team F\n`;
+                    message += `Both fighting to stay up\n\n`;
+                    message += `#WeekendPreview #Football #Fixtures`;
+                    break;
+                    
+                case 'live':
+                    message = `🔴 *LIVE MATCH UPDATE* 🔴\n\n`;
+                    message += `⚽ Team A 1-0 Team B\n`;
+                    message += `   ⏰ 23' - Player Name scored!\n\n`;
+                    message += `⚽ Team C 2-1 Team D\n`;
+                    message += `   ⏰ 12' - Player 1\n`;
+                    message += `   ⏰ 34' - Player 2\n`;
+                    message += `   ⏰ 45+1' - Player 3\n\n`;
+                    message += `More live updates coming...\n\n`;
+                    message += `#LiveFootball #Soccer #LiveScore`;
+                    break;
+            }
+            
+            const output = document.getElementById('whatsappOutput');
+            output.innerHTML = `<div style="white-space: pre-wrap;">${message}</div>`;
+            updateMessageStats(message);
+            showToast('Template loaded! Customize as needed.');
+        }
+        
+        // ==================== UTILITY FUNCTIONS ====================
+        function generateTeamForm() {
+            return Array.from({ length: 5 }, () => 
+                ['W', 'D', 'L'][Math.floor(Math.random() * 3)]
+            );
+        }
+        
+        function generateTeamStats() {
+            return {
+                goalsScored: (Math.random() * 2 + 1).toFixed(1),
+                goalsConceded: (Math.random() * 1.5).toFixed(1),
+                winRate: Math.floor(Math.random() * 30 + 40)
+            };
+        }
+        
+        function formatDate(date) {
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+        
+        function updateMessageStats(message) {
+            const charCount = message.length;
+            const lineCount = message.split('\n').length;
+            document.getElementById('messageStats').textContent = 
+                `${charCount} characters • ${lineCount} lines`;
+        }
+        
+        async function copyToClipboard() {
+            const output = document.getElementById('whatsappOutput');
+            const message = output.innerText || output.textContent;
+            
+            if (!message || message.includes('Your WhatsApp message')) {
+                showToast('No message to copy!', 'error');
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(message);
+                showToast('Message copied to clipboard!');
+                
+                // Animate copy button
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
+                copyBtn.style.background = '#1da851';
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="far fa-copy"></i> COPY TO CLIPBOARD';
+                    copyBtn.style.background = '';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Copy failed:', error);
+                showToast('Failed to copy. Please try again.', 'error');
+            }
+        }
+        
+        function clearOutput() {
+            const output = document.getElementById('whatsappOutput');
+            output.innerHTML = `
+                <div style="text-align: center; padding: 50px; color: #666;">
+                    <i class="fab fa-whatsapp" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                    <p>Your WhatsApp message will appear here</p>
+                    <small>Click "GENERATE UPDATE" to start</small>
+                </div>
+            `;
+            document.getElementById('messageStats').textContent = '0 characters • 0 lines';
+        }
+        
+        function testOnWhatsApp() {
+            const output = document.getElementById('whatsappOutput');
+            const message = output.innerText || output.textContent;
+            
+            if (!message || message.includes('Your WhatsApp message')) {
+                showToast('No message to test!', 'error');
+                return;
+            }
+            
+            // Create WhatsApp share URL
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+            
+            // Open in new tab
+            window.open(whatsappUrl, '_blank');
+            showToast('Opened in WhatsApp. Send to your channel!');
+        }
+        
+        function showToast(text, type = 'success') {
+            const toast = document.getElementById('toast');
+            const message = document.getElementById('toastMessage');
+            
+            message.textContent = text;
+            toast.className = 'toast';
+            toast.classList.add('show');
+            
+            if (type === 'error') {
+                toast.style.background = '#ff4444';
+            } else {
+                toast.style.background = '#25D366';
+            }
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
