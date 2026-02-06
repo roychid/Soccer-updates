@@ -4,7 +4,7 @@ export default async function handler(req, res) {
         
         const { league, date, live, team } = req.query;
         
-        let url = `https://v3.football.api-sports.io/fixtures?season=2024`;
+        let url = `https://v3.football.api-sports.io/fixtures?season=2025`;
         
         if (live === 'true') {
             url += '&live=all';
