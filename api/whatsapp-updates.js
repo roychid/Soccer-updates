@@ -1,7 +1,7 @@
 // api/whatsapp-updates.js
 export default async function handler(req, res) {
   try {
-    const API_KEY = "6d1dc2bda07f1d1768d9ad2d082f00d4";
+    const API_KEY = "8b93d10d51a93a1b2b70a5a3a9411161";
 
     // Define top leagues (you can customize)
     const topLeagues = [
