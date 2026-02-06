@@ -1,6 +1,6 @@
 // Configuration
 const CONFIG = {
-    API_KEY: "6d1dc2bda07f1d1768d9ad2d082f00d4", // Replace with your actual API key
+    API_KEY: "8b93d10d51a93a1b2b70a5a3a9411161", // Replace with your actual API key
     API_BASE: "https://v3.football.api-sports.io",
     LEAGUES: [
         { id: 39, name: "Premier League", country: "England" },
